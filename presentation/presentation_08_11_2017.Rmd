@@ -1,0 +1,199 @@
+---
+title: "Le marché d'occasion de l'automobille"
+subtitle: "Substituabilité entre les types de véhicules"
+author: "Ainouche Mourad & Bettega Paul"
+date: "8 novembre 2017"
+output: 
+  revealjs::revealjs_presentation:
+    theme: sky
+    highlight: pygments
+    center: true
+---
+
+# Présentation des données
+
+## Source
+
+> - source: https://www.kaggle.com/orgesleka/used-cars-database/dataOn
+> - Base de données sur le marché de l'occasion automobille en allemagne
+> - Données datant de 2016
+> - Données récolté a partir des informations fournit par les vendeurs
+
+## Première Aperçu
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(knitr)
+source("C:/Users/bettega/Documents/informatique/bettegar.R")
+d <- read_csv("automobille/autos_2.csv")
+kable(resume(d))
+```
+
+# Statistiques descriptives
+
+## Le prix
+
+```{r, echo=FALSE, warning=FALSE}
+summary(d$price)
+```
+
+## abtest
+
+```{r, echo=FALSE, warning=FALSE}
+recap_facteur(d$abtest)
+```
+
+## Le type de véhicule
+
+```{r, echo=FALSE, warning=FALSE}
+recap_facteur(d$vehicleType)
+```
+
+## Année d'enregistrement
+
+```{r, echo=FALSE, warning=FALSE}
+recap_facteur(d$abtest)
+```
+
+## Type de boite
+
+```{r, echo=FALSE, warning=FALSE}
+recap_facteur(d$gearbox)
+```
+
+## Le Nombre de chevaux
+
+```{r, echo=FALSE, warning=FALSE}
+summary(d$powerPS)
+```
+
+## model
+
+```{r, echo=FALSE, warning=FALSE}
+recap_facteur(d$model)
+```
+
+## Le nombre de Kilomètre
+
+```{r, echo=FALSE, warning=FALSE}
+summary(d$kilometer)
+```
+
+## Type d'énergie consommé
+
+```{r, echo=FALSE, warning=FALSE}
+recap_facteur(d$fuelType)
+```
+
+## La Marque
+
+```{r, echo=FALSE, warning=FALSE}
+recap_facteur(d$brand)
+```
+
+## La présence de dégats non-réparé
+
+```{r, echo=FALSE, warning=FALSE}
+recap_facteur(d$notRepairedDamage)
+```
+
+# La Sélection de l'échantillon
+
+## Les étapes de la sélection
+
+> - Sélectionner les variables pertinantes pour l'analyse
+> - Recoder les valeurs abhérantes en valeur manquantes
+> - Supprimer les individues pour lequelles il nous manques des informations
+> - Recoder certaines variables
+
+## Les variables sélectionnées
+
+- Le prix
+- l'année d'enregistrement du véhicule
+- la puissance de la voiture
+- le nombre de kilomètre
+- la marque et le type de véhicule
+- le modèle du véhicule
+
+## Autres information sur le vehicule
+
+- le type d'énergie utilisée
+- le type ABS
+- le type de boite
+- présence de dégats non réparé
+
+## Les valeurs abhérantes
+
+- les prix > à 16900€ ou < à 500€
+- les puissances > 292 HSP ou = 0 HSP
+- l'année d'enregistrement et antérieur à 1983 ou postérieur à 2016
+
+## variable recodée
+
+ On a recodé la variable type de combustible utilisé, en raison de la présence de nombreuse modalité très peut représenté dans l'échantillon.
+Ces modalitées on donc était regroupé dans une catégorie "Autre".
+  
+# Le prix des véhicules 
+
+## type de véhicule
+
+```{r, echo=FALSE}
+type <- ggplot(data = d, aes(vehicleType, price, fill=vehicleType)) + 
+  geom_boxplot() +
+  ggtitle("Distribution du prix des véhicule en fonction du type de véhicule")
+type
+```
+
+## type d'énergie utilisé par le véhicule
+
+```{r, echo=FALSE}
+fuel <- ggplot(data = d, aes(fuelType, price, fill=fuelType)) + 
+  geom_boxplot() +
+  ggtitle("Distribution du prix des véhicule en fonction du type d'énergie qu'il utilise")
+fuel
+```
+
+## Dégats non réparé
+
+```{r, echo=FALSE}
+dommage <- ggplot(data = d, aes(notRepairedDamage, price, fill=notRepairedDamage)) + 
+  geom_boxplot() +
+  ggtitle("Distribution du prix des véhicule en fonction du type d'énergie qu'il utilise")
+dommage
+```
+
+## Type de véhicule
+
+```{r, echo=FALSE}
+marque <- ggplot(data = d, aes(brand, price, fill=brand)) + 
+  geom_boxplot() +
+  ggtitle("Distribution du prix des véhicule en fonction du type de véhicule")
+marque
+```
+
+## Année d'enregistrement du véhicule
+
+```{r, echo=FALSE, message=FALSE}
+year <- ggplot(data = d, aes(yearOfRegistration, price)) +
+  geom_smooth() +
+  ggtitle("Prix des vehicules en fonction de l'année d'enregistrement")
+year
+```
+
+## Nombre de Kilomètre
+
+```{r, echo=FALSE, message=FALSE}
+kilom <- ggplot(data = d, aes(kilometer, price)) +
+  geom_smooth() +
+  ggtitle("Prix des vehicules en fonction du nombre de kilomètre du vehicule")
+kilom
+```
+
+## Nombre de chevaux
+
+```{r, echo=FALSE, message=FALSE}
+power <- ggplot(data = d, aes(powerPS, price)) +
+  geom_smooth() +
+  ggtitle("Prix des vehicules en fonction du nombre de chevaux moteur")
+power
+```
